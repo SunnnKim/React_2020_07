@@ -62,19 +62,20 @@ class App extends Component {
         <Subject 
           title={this.state.subject.title}
           sub = {this.state.subject.sub}
-          onChangePage = { function(id) {
+          onChangePage = { function() {
             // alert('hihi');
-            this.setState({
+            this.setState({ 
                 mode: 'welcome',
-                selected_content_id : id 
               });
           }.bind(this)}
         >
         </Subject>
         <TOC
- 
-          onChangePage = {function(){
-            this.setState({ mode : 'read' });
+          onChangePage = {function(data){
+            this.setState({ 
+              mode : 'read',
+              selected_content_id: data
+          });
           }.bind(this)}
           data={this.state.content}></TOC>
         <Content title={_title} content={_content}></Content>
