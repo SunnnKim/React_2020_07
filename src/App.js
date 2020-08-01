@@ -37,9 +37,9 @@ class App extends Component {
 
   render(){
     // console 에 찍어보기
-    console.log('App render...')
+    console.log('App render...');
 
-    var _title, _content ;
+    var _title, _content;
     if ( this.state.mode === 'welcome'){
       _title = this.state.welcome.title;
       _content = this.state.welcome.content;
@@ -62,21 +62,21 @@ class App extends Component {
         <Subject 
           title={this.state.subject.title}
           sub = {this.state.subject.sub}
-          onChangePage = { function() {
-            // alert('hihi');
+          onChangePage = { () => {  
+            // arrow function을 사용하면 this가 자동으로 상위스코프로 바인딩 되기 때문에 bind() 함수를 사용하지 않아도 된다.
             this.setState({ 
-                mode: 'welcome',
+                mode: 'welcome'
               });
-          }.bind(this)}
+          }}
         >
         </Subject>
         <TOC
-          onChangePage = {function(data){
+          onChangePage = {(data) => {
             this.setState({ 
               mode : 'read',
-              selected_content_id: data
+              selected_content_id: Number(data)
           });
-          }.bind(this)}
+          }}
           data={this.state.content}></TOC>
         <Content title={_title} content={_content}></Content>
       </div>

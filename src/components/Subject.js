@@ -15,11 +15,11 @@ class Subject extends Component {
             <header>
                 <h1>
                     <a href="/" onClick={ 
-                        function(e){
+                        e => {
                             e.preventDefault();
                             this.props.onChangePage();
                             
-                        }.bind(this)}>
+                        }}>
                     {this.props.title}
                     </a>
                 </h1>
