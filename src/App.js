@@ -30,7 +30,8 @@ class App extends Component {
         { id: 1, title: 'HTML', description: 'HTML is mark-up language..' },
         { id: 2, title: 'CSS', description:'CSS is stylesheet for web..'},
         { id: 3, title: 'JavaScript', description: 'JavaScript is script language..' }
-      ]
+      ],
+      selected_content_id: 2  // 기본으로 선택된아이디
     }
   }
 
@@ -43,8 +44,14 @@ class App extends Component {
       _title = this.state.welcome.title;
       _content = this.state.welcome.content;
     }else if( this.state.mode === 'read'){
-      _title = this.state.content[0].title;
-      _content = this.state.content[0].description;
+      var data = this.state.content;
+      for( var i in data ){
+        if(data[i].id === this.state.selected_content_id){
+          _title = this.state.content[i].title;
+          _content = this.state.content[i].description;
+          break;
+        }
+      }
     }
 
 
@@ -55,15 +62,21 @@ class App extends Component {
         <Subject 
           title={this.state.subject.title}
           sub = {this.state.subject.sub}
-          onChangePage = { function() {
+          onChangePage = { function(id) {
             // alert('hihi');
             this.setState({
-                mode: 'welcome'
+                mode: 'welcome',
+                selected_content_id : id 
               });
           }.bind(this)}
         >
         </Subject>
-        <TOC data={this.state.content}></TOC>
+        <TOC
+ 
+          onChangePage = {function(){
+            this.setState({ mode : 'read' });
+          }.bind(this)}
+          data={this.state.content}></TOC>
         <Content title={_title} content={_content}></Content>
       </div>
     )
