@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import Subject from './components/Subject';
 import TOC from "./components/TOC";
-import Content from "./components/Content";
+import ReadContent from "./components/ReadContent";
+import CreateContent from "./components/CreateContent";
+import Control from "./components/Control";
 
 // import logo from './logo.svg';
 // import './App.css';
@@ -18,7 +20,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mode: 'read',
+      mode: 'create',
       subject: {
         title: 'WEB',
         sub: 'World Wide Web. this is writing from state'
@@ -39,11 +41,15 @@ class App extends Component {
     // console 에 찍어보기
     console.log('App render...');
 
-    var _title, _content;
+    var _title, _content, _article = null;
+    // Welcome 모드일 때
     if ( this.state.mode === 'welcome'){
       _title = this.state.welcome.title;
       _content = this.state.welcome.content;
-    }else if( this.state.mode === 'read'){
+      _article = <ReadContent title={_title} content={_content}></ReadContent>;
+    }
+    // Read 모드일 때
+    else if( this.state.mode === 'read'){
       var data = this.state.content;
       for( var i in data ){
         if(data[i].id === this.state.selected_content_id){
@@ -52,35 +58,61 @@ class App extends Component {
           break;
         }
       }
+      _article = <ReadContent title={_title} content={_content}></ReadContent>;
+    }
+    // Create 모드일 때 
+    else if( this.state.mode === 'create'){
+      _article = <CreateContent addPage={function(_title, _desc){
+        var arr = this.state.content;
+        var data = {
+          id : arr.length + 1,
+          title : _title,
+          description : _desc
+        }
+        arr.push(data)
+        console.log(arr);
+
+        this.setState({
+          content : arr
+        })
+      }.bind(this)}></CreateContent>;
     }
 
 
     // props 적용하기
     // Component 태그에 어트리뷰트(props)를 적용하여 성능 개선 가능
-    return (  // JSX ---- JS 문법은 모두 {} 안에 쓰도록 한다 
+    return (
+      // JSX ---- JS 문법은 모두 {} 안에 쓰도록 한다
       <div className="App">
-        <Subject 
+        <Subject
           title={this.state.subject.title}
-          sub = {this.state.subject.sub}
-          onChangePage = { () => {  
+          sub={this.state.subject.sub}
+          onChangePage={() => {
             // arrow function을 사용하면 this가 자동으로 상위스코프로 바인딩 되기 때문에 bind() 함수를 사용하지 않아도 된다.
-            this.setState({ 
-                mode: 'welcome'
-              });
+            this.setState({
+              mode: "welcome",
+            });
           }}
-        >
-        </Subject>
+        ></Subject>
+        {/* subject */}
         <TOC
-          onChangePage = {(data) => {
-            this.setState({ 
-              mode : 'read',
-              selected_content_id: Number(data)
-          });
+          onChangePage={(data) => {
+            this.setState({
+              mode: "read",
+              selected_content_id: Number(data),
+            });
           }}
-          data={this.state.content}></TOC>
-        <Content title={_title} content={_content}></Content>
+          data={this.state.content}
+        ></TOC>
+        <Control onChangeMode={ function(_mode){
+           this.setState({
+             mode: _mode,
+           });
+        }.bind(this)}></Control> {/* CRUD - event handler 실행되도록 bind*/}
+        {_article}
+        {/* article : mode 에 따라 달라지는 component */}
       </div>
-    )
+    );
   }
 }
 
