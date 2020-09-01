@@ -16,9 +16,6 @@ class CreateContent extends Component {
                           e.target.title.value,
                           e.target.desc.value
                         );
-                        document.querySelector("input[name=title]").value = ""
-                        // document.querySelector("textarea[name=desc]").value = ""   
-                        e.target.desc.value = "";
                     }.bind(this) }
                 >
                     <p><input type="text" name="title" placeholder="title.."></input></p>
