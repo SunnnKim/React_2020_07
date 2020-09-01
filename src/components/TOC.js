@@ -1,9 +1,20 @@
 import React, {Component} from 'react';
 
 class TOC extends Component{
+    // shouldComponentUpdate : 원본과 바뀐 데이터를 확인하는 메소드
+    // false를 리턴하면 render함수가 실행되지 않는다
+    // immutable 라이브러리를 사용하면 객체는 절대 원본을 바꾸지 않고 복제해서 배열과 객체를 사용하게된다
+
+    shouldComponentUpdate(newProps, newState){
+        console.log('TOc check........>');
+        console.log(this.props.data, newProps.data)
+        if(this.props.data === newProps.data){
+            return false;
+        }
+        return true;
+    }
     render(){
         console.log('TOC render...')
-
         var list = [];
         var data = this.props.data;
         for (var val of data){

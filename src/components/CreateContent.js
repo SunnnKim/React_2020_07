@@ -11,12 +11,14 @@ class CreateContent extends Component {
                 <form action="/create_process" method="post"
                     onSubmit={ function(e){ // submit버튼 누른 후의 이벤트 정의
                         e.preventDefault();
-                        alert('Submit~');
-                        var _title = document.querySelector("input[name=title]").value;
-                        var _desc = document.querySelector("textarea[name=desc]").value;
-                        this.props.addPage(_title, _desc);
+                        // alert('Submit~');
+                        this.props.addPage(
+                          e.target.title.value,
+                          e.target.desc.value
+                        );
                         document.querySelector("input[name=title]").value = ""
-                        document.querySelector("textarea[name=desc]").value = ""   
+                        // document.querySelector("textarea[name=desc]").value = ""   
+                        e.target.desc.value = "";
                     }.bind(this) }
                 >
                     <p><input type="text" name="title" placeholder="title.."></input></p>

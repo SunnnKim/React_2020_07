@@ -19,6 +19,7 @@ class App extends Component {
   // 생성자 : props와 state 값을 정의함, 초기화
   constructor(props) {
     super(props);
+    this.max_content_id = 3;  // Ui와 관련없는 부분은 state 밖으로 뺴기
     this.state = {
       mode: 'create',
       subject: {
@@ -63,18 +64,23 @@ class App extends Component {
     // Create 모드일 때 
     else if( this.state.mode === 'create'){
       _article = <CreateContent addPage={function(_title, _desc){
-        var arr = this.state.content;
+        var _arr = this.state.content;
+        this.max_content_id = this.max_content_id + 1;
+        console.log(this.max_content_id);
         var data = {
-          id : arr.length + 1,
-          title : _title,
-          description : _desc
-        }
-        arr.push(data)
-        console.log(arr);
-
+          id: this.max_content_id,
+          title: _title,
+          description: _desc,
+        };
+        var _contents = this.state.content.concat(data);
+        // concat은 원본 배열에 데이터를 추가하는 것이 아니고 새로운 배열에 복제해서 보여준다
+        // push는 원본 배열에 직접 데이터를 추가하는 방식으로 원본 데이터가 훼손될 수 있다.
+        // concat을 사용하면 변화가 있을 때만 rendering이 진행되도록 만들 수 있고
+        // 성능개선시 조금 더 편할 수 있음
+    
         this.setState({
-          content : arr
-        })
+          content: _contents
+        });
       }.bind(this)}></CreateContent>;
     }
 
