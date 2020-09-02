@@ -23,7 +23,7 @@ class App extends Component {
     super(props);
     this.max_content_id = 3;  // Ui와 관련없는 부분은 state 밖으로 뺴기
     this.state = {
-      mode: 'create',
+      mode: 'welcome',
       subject: {
         title: 'WEB',
         sub: 'World Wide Web. this is writing from state'
@@ -36,7 +36,7 @@ class App extends Component {
         { id: 2, title: 'CSS', description:'CSS is stylesheet for web..'},
         { id: 3, title: 'JavaScript', description: 'JavaScript is script language..' }
       ],
-      selected_content_id: 2  // 기본으로 선택된아이디
+      selected_content_id: 1  // 기본으로 선택된아이디
     }
   }
 
@@ -47,6 +47,7 @@ class App extends Component {
         return data;
       }
     }
+    return null;
 
   }
   // getContent 함수 : artical 부분의 코드를 옮겨 적는다
@@ -99,13 +100,20 @@ class App extends Component {
     else if (this.state.mode === "update") {
       // 현재 선택된 content값을 가져온다
       var _contents = this.getReadContent();
-      // console.log(_contents);
+      // 업데이트할 콘텐츠가 없는 경우
+      if( _contents === null ){
+        alert('no content!');
+        this.setState({ mode:'welcome'})
+        return;
+      }
       _article = (
         <UpdateContent
           selected_content={_contents}
           updatePage ={function (_id, _title, _desc) {
             // this.state.content를 복사하기 : Array.from(배열)
             var _content = Array.from(this.state.content);
+
+
             for(var i in _content){
               if( _content[i].id === _id){
                 _content[i] = {
@@ -123,7 +131,6 @@ class App extends Component {
           }.bind(this)}
         ></UpdateContent>
       );
-       
     }
     return _article;
   }
@@ -159,9 +166,34 @@ class App extends Component {
           data={this.state.content}
         ></TOC>
         <Control onChangeMode={ function(_mode){
-           this.setState({
-             mode: _mode,
-           });
+          
+          // 삭제시 
+          if( _mode =='delete'){
+            // 콘텐츠가 없을 경우 
+            if (this.state.content.length === 0) {
+              alert('content is not exist');
+              return;
+            } 
+            var _contents = Array.from(this.state.content);
+            if(window.confirm('delete it?')){
+              for(var i in _contents){
+                if(_contents[i].id === this.state.selected_content_id){
+                  _contents.splice(i, 1);
+                  break;
+                }
+              }
+              this.setState({
+                content: _contents,
+                mode : 'welcome',
+              })
+            }
+          }
+          
+          else{
+            this.setState({
+              mode: _mode,
+            });
+          }
         }.bind(this)}></Control> {/* CRUD - event handler 실행되도록 bind*/}
         {this.getContent()}
         {/* article : mode 에 따라 달라지는 component */}
